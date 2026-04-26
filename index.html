@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyCash - Pro Dashboard</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#6c5ce7">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+
+<div class="glass-container">
+    <div class="mobile-header">
+        <h3>MYCASH</h3>
+        <div class="header-actions">
+            <button onclick="showUserModal(true)"><i class="fas fa-users"></i></button>
+            <button onclick="toggleTheme()"><i class="fas fa-adjust"></i></button>
+            <button onclick="logout()"><i class="fas fa-power-off"></i></button>
+        </div>
+    </div>
+
+    <div class="sidebar">
+        <div class="sidebar-top">
+            <h2 style="color: var(--primary);">MYCASH</h2>
+            <div class="date-time-card">
+                <p id="live-day">--</p>
+                <h1 id="live-time">00:00:00</h1>
+                <p id="live-date">--/--/----</p>
+            </div>
+        </div>
+
+        <div class="card user-card" onclick="showUserModal(true)">
+            <p style="font-size: 0.7rem; color: var(--text-dim)">ACTIVE USER</p>
+            <h3 id="display-name">Guest</h3>
+        </div>
+
+        <nav class="sidebar-nav">
+            <button onclick="showUserModal(true)" class="primary-btn glass-btn"><i class="fas fa-user-plus"></i> Switch User</button>
+            <button onclick="toggleTheme()" class="primary-btn glass-btn"><i class="fas fa-adjust"></i> Theme</button>
+            <button onclick="downloadPDF()" class="primary-btn solid-btn"><i class="fas fa-file-pdf"></i> Download PDF</button>
+            <button onclick="clearHistory()" class="primary-btn danger-btn"><i class="fas fa-trash-alt"></i> Wipe Data</button>
+        </nav>
+    </div>
+
+    <div class="content">
+        <div class="responsive-grid grid-3">
+            <div class="card stat-card"><small>Cash</small><h2 id="acc-cash">₹0</h2></div>
+            <div class="card stat-card"><small>Bank</small><h2 id="acc-bank">₹0</h2></div>
+            <div class="card stat-card"><small>UPI</small><h2 id="acc-upi">₹0</h2></div>
+        </div>
+
+        <div class="responsive-grid grid-3">
+            <div class="card chart-card"><center><small>Balance</small></center><div class="chart-wrapper"><canvas id="balanceGauge"></canvas></div></div>
+            <div class="card chart-card"><center><small>Income</small></center><div class="chart-wrapper"><canvas id="flowGauge"></canvas></div></div>
+            <div class="card chart-card"><center><small>Expenses</small></center><div class="chart-wrapper"><canvas id="spendGauge"></canvas></div></div>
+        </div>
+
+        <div class="responsive-grid grid-main">
+            <div class="card trend-section">
+                <div class="section-header">
+                    <h4>Trends</h4>
+                    <div class="filter-group">
+                        <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
+                        <button class="filter-btn" onclick="setFilter('income', this)">In</button>
+                        <button class="filter-btn" onclick="setFilter('expense', this)">Out</button>
+                    </div>
+                </div>
+
+                <div class="analytics-controls">
+                    <div class="btn-group">
+                        <button onclick="setChartView('daily')" class="mini-btn">Day</button>
+                        <button onclick="setChartView('weekly')" class="mini-btn">Week</button>
+                        <button onclick="setChartView('monthly')" class="mini-btn">Month</button>
+                    </div>
+                    <select onchange="setMonthFilter(this.value)" class="month-select">
+                        <option value="all">All Months</option>
+                        <option value="0">Jan</option><option value="1">Feb</option><option value="2">Mar</option>
+                        <option value="3">Apr</option><option value="4">May</option><option value="5">Jun</option>
+                        <option value="6">Jul</option><option value="7">Aug</option><option value="8">Sep</option>
+                        <option value="9">Oct</option><option value="10">Nov</option><option value="11">Dec</option>
+                    </select>
+                </div>
+
+                <div class="main-chart-container"><canvas id="trendChart"></canvas></div>
+            </div>
+
+            <div class="card entry-section">
+                <h4>Add Transaction</h4>
+                <div class="input-group">
+                    <input type="text" id="desc" placeholder="What for?">
+                    <div class="row-inputs">
+                        <input type="number" id="amount" placeholder="Amount">
+                        <input type="date" id="custom-date">
+                    </div>
+                    <div class="row-inputs">
+                        <select id="type">
+                            <option value="income">Income (+)</option>
+                            <option value="expense">Expense (-)</option>
+                        </select>
+                        <select id="account">
+                            <option value="Cash">Cash</option>
+                            <option value="Bank">Bank</option>
+                            <option value="UPI">UPI</option>
+                        </select>
+                    </div>
+                    <button onclick="addTransaction()" class="primary-btn solid-btn">Add Entry</button>
+                </div>
+                <div id="list-container" class="history-list"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="pdf-template" style="display:none; padding:30px; background:white; color:black; font-family: sans-serif;">
+    <h1 style="color:#6c5ce7; border-bottom: 2px solid #6c5ce7;">Financial Report</h1>
+    <p>User: <b id="pdf-user"></b> | Date: <span id="pdf-report-date"></span></p>
+    <div style="display:flex; gap:20px; margin:20px 0; background: #f9f9f9; padding: 15px; border-radius: 10px;">
+        <div style="flex:1">Income: <h2 id="pdf-income" style="color:green"></h2></div>
+        <div style="flex:1">Expense: <h2 id="pdf-expense" style="color:red"></h2></div>
+        <div style="flex:1">Balance: <h2 id="pdf-balance" style="color:#333"></h2></div>
+    </div>
+    <table style="width:100%; border-collapse:collapse;">
+        <thead><tr style="background:#eee"><th>Day</th><th>Date</th><th>Description</th><th>Type</th><th>Amount</th></tr></thead>
+        <tbody id="pdf-table-body"></tbody>
+    </table>
+</div>
+
+<div id="userModal" class="modal">
+    <div class="modal-content card">
+        <h3>Manage Accounts</h3>
+        <div id="userList" class="user-list"></div>
+        <hr class="divider">
+        <input type="text" id="newUserName" placeholder="Enter name">
+        <button onclick="addUser()" class="primary-btn solid-btn">Add New User</button>
+        <button onclick="closeModal()" id="backBtn" class="primary-btn outline-btn">Cancel</button>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
