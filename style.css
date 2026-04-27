@@ -74,7 +74,7 @@ body {
 /* Responsive Grid System */
 .responsive-grid { display: grid; gap: 20px; }
 .grid-3 { grid-template-columns: repeat(3, 1fr); }
-.grid-main { grid-template-columns: 1.3fr 1fr; }
+.grid-main { grid-template-columns: 1fr !important; }
 
 /* Card Components */
 .card {
@@ -143,7 +143,9 @@ input, select {
 /* Desktop Hover */
 .user-card:hover { border-color: var(--primary); background: var(--glass-heavy); }
 
-/* ========== MOBILE ========== */
+/* --- RESPONSIVE MEDIA QUERIES --- */
+
+/* ========== BASE (MOBILE FIRST) ========== */
 
 body {
     margin: 0;
@@ -153,30 +155,24 @@ body {
     font-family: sans-serif;
 }
 
+/* Container */
 .glass-container {
+    display: flex;
     flex-direction: column;
     width: 100%;
-    height: 100vh;
+    height: auto;
     border-radius: 0;
+    overflow: hidden;
+    min-height: 100vh;
 }
 
-/* ✅ FIXED SIDEBAR MOBILE */
+/* ✅ FIXED HERE ONLY */
 .sidebar {
-    position: fixed;
-    top: 0;
-    left: -260px;
-    width: 250px;
-    height: 100%;
-    background: rgba(0,0,0,0.9);
-    z-index: 1000;
-    transition: 0.3s;
+    display: block;
+    width: 100%;
 }
 
-/* SHOW */
-.sidebar.active {
-    left: 0;
-}
-
+/* Mobile Header */
 .mobile-header {
     display: flex;
     justify-content: space-between;
@@ -184,11 +180,6 @@ body {
     padding: 15px 20px;
     background: rgba(0, 0, 0, 0.2);
     border-bottom: 1px solid var(--border);
-}
-
-.menu-btn {
-    font-size: 1.5rem;
-    cursor: pointer;
 }
 
 /* Header buttons */
@@ -202,84 +193,124 @@ body {
     cursor: pointer;
 }
 
+/* Content */
 .content {
     padding: 15px;
+    overflow: visible;
 }
 
+/* Grid */
 .grid-3 {
+    display: grid;
     grid-template-columns: 1fr;
     gap: 15px;
 }
 
+/* Cards */
+.chart-card {
+    display: block;
+}
+
+/* Chart */
 .chart-wrapper {
     width: 100%;
     height: 150px;
 }
 
+/* Inputs */
 .row-inputs {
+    display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-/* ========== TABLET ========== */
+/* ========== TABLET (768px+) ========== */
 
 @media (min-width: 768px) {
 
-    body { align-items: center; }
+    body {
+        align-items: center;
+    }
 
     .glass-container {
         flex-direction: row;
         width: 95%;
         height: 95vh;
         border-radius: 16px;
+        border: 1px solid var(--border);
     }
 
     .sidebar {
-        position: relative;
-        left: 0;
+        display: block;
         width: 220px;
         background: rgba(0,0,0,0.3);
         padding: 20px;
     }
 
-    .mobile-header { display: none; }
+    .mobile-header {
+        display: none;
+    }
 
-    .content { padding: 20px; }
+    .content {
+        flex: 1;
+        padding: 20px;
+    }
 
-    .grid-3 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 {
+        grid-template-columns: repeat(2, 1fr);
+    }
 
-    .chart-wrapper { height: 180px; }
+    .chart-wrapper {
+        height: 180px;
+    }
 
-    .row-inputs { flex-direction: row; }
+    .row-inputs {
+        flex-direction: row;
+        gap: 10px;
+    }
 }
 
-/* ========== DESKTOP ========== */
+/* ========== DESKTOP (1024px+) ========== */
 
 @media (min-width: 1024px) {
-    .glass-container { width: 1200px; }
-    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+
+    .glass-container {
+        width: 1200px;
+    }
+
+    .grid-3 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .chart-wrapper {
+        height: 200px;
+    }
 }
 
-/* ========== LARGE SCREEN ========== */
+/* ========== LARGE SCREEN (1440px+) ========== */
 
 @media (min-width: 1440px) {
-    .glass-container { width: 1400px; }
-    .content { padding: 30px; }
+
+    .glass-container {
+        width: 1400px;
+    }
+
+    .content {
+        padding: 30px;
+    }
+
+    .chart-wrapper {
+        height: 220px;
+    }
 }
 
-/* Scrollbar */
+/* Scrollbar Styling */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
 
-/* Modal */
+/* Modal Styling */
 .modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.85);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    padding: 20px;
+    position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+    display: none; justify-content: center; align-items: center; z-index: 1000; padding: 20px;
 }
 .modal-content { width: 100%; max-width: 400px; text-align: center; }
