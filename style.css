@@ -32,6 +32,7 @@ body {
     justify-content: center;
     align-items: center;
     color: var(--text-main);
+    overflow: hidden;
 }
 
 /* Container Structure */
@@ -48,7 +49,7 @@ body {
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 }
 
-/* Sidebar Styling */
+/* Sidebar Styling (Desktop Default) */
 .sidebar {
     width: 300px;
     background: rgba(0, 0, 0, 0.2);
@@ -137,178 +138,100 @@ input, select {
     align-items: center;
 }
 
-/* Mobile Specifics */
-.mobile-header { display: none; }
-
-/* Desktop Hover */
-.user-card:hover { border-color: var(--primary); background: var(--glass-heavy); }
-
 /* --- RESPONSIVE MEDIA QUERIES --- */
 
-/* ========== BASE (MOBILE FIRST) ========== */
-
-body {
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    font-family: sans-serif;
-}
-
-/* Container */
-.glass-container {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: auto;
-    border-radius: 0;
-    overflow: hidden;
-    min-height: 100vh;
-}
-
-/* ✅ FIXED HERE ONLY */
-.sidebar {
-    display: block;
-    width: 100%;
-}
-
-/* Mobile Header */
-.mobile-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 20px;
-    background: rgba(0, 0, 0, 0.2);
-    border-bottom: 1px solid var(--border);
-}
-
-/* Header buttons */
-.header-actions button {
-    background: var(--glass-heavy);
-    border: none;
-    color: var(--text-main);
-    padding: 8px 12px;
-    border-radius: 8px;
-    margin-left: 5px;
-    cursor: pointer;
-}
-
-/* Content */
-.content {
-    padding: 15px;
-    overflow: visible;
-}
-
-/* Grid */
-.grid-3 {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 15px;
-}
-
-/* Cards */
-.chart-card {
-    display: block;
-}
-
-/* Chart */
-.chart-wrapper {
-    width: 100%;
-    height: 150px;
-}
-
-/* Inputs */
-.row-inputs {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-/* ========== TABLET (768px+) ========== */
-
-@media (min-width: 768px) {
-
+@media (max-width: 767px) {
     body {
-        align-items: center;
+        align-items: flex-start;
+        height: auto;
     }
 
+    .glass-container {
+        flex-direction: column;
+        width: 100%;
+        height: 100vh;
+        border-radius: 0;
+        border: none;
+    }
+
+    /* FIX: Sidebar becomes a visible Bottom Menu on Mobile */
+    .sidebar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: auto;
+        padding: 10px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        background: rgba(10, 10, 20, 0.98);
+        backdrop-filter: blur(15px);
+        border-right: none;
+        border-top: 1px solid var(--border);
+        z-index: 9999;
+        gap: 8px;
+    }
+
+    /* Hide text labels or logos that take too much space on mobile sidebar */
+    .sidebar h1, .sidebar p, .user-card small {
+        display: none;
+    }
+
+    /* Action buttons adjustment */
+    .sidebar button, .sidebar-nav button {
+        flex: 1;
+        min-width: 80px;
+        font-size: 0.75rem;
+        padding: 8px 5px;
+    }
+
+    .sidebar-nav {
+        margin-top: 0;
+        flex-direction: row;
+        width: 100%;
+        gap: 8px;
+    }
+
+    .content {
+        padding: 15px;
+        padding-bottom: 150px; /* Space to see cards behind the bottom menu */
+        overflow-y: auto;
+    }
+
+    .grid-3 {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (min-width: 768px) {
     .glass-container {
         flex-direction: row;
         width: 95%;
         height: 95vh;
-        border-radius: 16px;
-        border: 1px solid var(--border);
+        border-radius: 24px;
     }
 
     .sidebar {
-        display: block;
-        width: 220px;
-        background: rgba(0,0,0,0.3);
-        padding: 20px;
-    }
-
-    .mobile-header {
-        display: none;
-    }
-
-    .content {
-        flex: 1;
-        padding: 20px;
+        display: flex;
+        width: 280px;
+        height: 100%;
     }
 
     .grid-3 {
         grid-template-columns: repeat(2, 1fr);
     }
-
-    .chart-wrapper {
-        height: 180px;
-    }
-
-    .row-inputs {
-        flex-direction: row;
-        gap: 10px;
-    }
 }
 
-/* ========== DESKTOP (1024px+) ========== */
-
 @media (min-width: 1024px) {
-
-    .glass-container {
-        width: 1200px;
-    }
-
     .grid-3 {
         grid-template-columns: repeat(3, 1fr);
     }
-
-    .chart-wrapper {
-        height: 200px;
-    }
 }
 
-/* ========== LARGE SCREEN (1440px+) ========== */
-
-@media (min-width: 1440px) {
-
-    .glass-container {
-        width: 1400px;
-    }
-
-    .content {
-        padding: 30px;
-    }
-
-    .chart-wrapper {
-        height: 220px;
-    }
-}
-
-/* Scrollbar Styling */
+/* Scrollbar & Modal */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
-
-/* Modal Styling */
 .modal {
     position: fixed; inset: 0; background: rgba(0,0,0,0.85);
     display: none; justify-content: center; align-items: center; z-index: 1000; padding: 20px;
