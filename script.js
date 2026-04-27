@@ -10,6 +10,25 @@ let chartMonth = 'all';
 // custom date filter
 let selectedDateFilter = null;
 
+// ✅ FIX: Sidebar Toggle
+function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    if (sidebar) sidebar.classList.toggle('active');
+}
+
+// ✅ FIX: Auto close sidebar when clicking outside
+document.addEventListener('click', function(e) {
+    const sidebar = document.querySelector('.sidebar');
+    const menuBtn = document.querySelector('.menu-btn');
+
+    if (!sidebar || !menuBtn) return;
+
+    if (!sidebar.contains(e.target) && !menuBtn.contains(e.target)) {
+        sidebar.classList.remove('active');
+    }
+});
+
+
 // 1. Clock Logic
 function updateClock() {
     const now = new Date();
@@ -225,7 +244,7 @@ function updateUI() {
     renderCharts(totalIncome, totalExpense, trendData, trendLabels);
 }
 
-// 6. Charts
+// 6. Charts (unchanged)
 function renderCharts(inc, exp, trend, labels) {
     const config = { responsive: true, maintainAspectRatio: false };
 
@@ -330,7 +349,8 @@ function clearHistory() {
         location.reload();
     }
 }
-// PWA Service Worker Registration
+
+// PWA Service Worker
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js');
 }
