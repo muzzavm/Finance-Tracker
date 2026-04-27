@@ -10,21 +10,26 @@ let chartMonth = 'all';
 // custom date filter
 let selectedDateFilter = null;
 
-// ✅ FIX: Sidebar Toggle
+// ✅ FIX: Sidebar Toggle (Hamburger menu click cheyyumpo work aakan)
 function toggleSidebar() {
     const sidebar = document.querySelector('.sidebar');
-    if (sidebar) sidebar.classList.toggle('active');
+    if (sidebar) {
+        sidebar.classList.toggle('active');
+    }
 }
 
-// ✅ FIX: Auto close sidebar when clicking outside
+// ✅ FIX: Auto close sidebar when clicking outside (Content area-il click cheythaal close aakum)
 document.addEventListener('click', function(e) {
     const sidebar = document.querySelector('.sidebar');
-    const menuBtn = document.querySelector('.menu-btn');
+    const menuBtn = document.getElementById('sidebarToggle'); // Navbar-ile icon ID
 
-    if (!sidebar || !menuBtn) return;
+    if (!sidebar) return;
 
-    if (!sidebar.contains(e.target) && !menuBtn.contains(e.target)) {
-        sidebar.classList.remove('active');
+    // Sidebar active aayirikkumpo athinte puratho, toggle button-u puratho click cheythaal close aakum
+    if (sidebar.classList.contains('active')) {
+        if (!sidebar.contains(e.target) && (menuBtn && !menuBtn.contains(e.target))) {
+            sidebar.classList.remove('active');
+        }
     }
 });
 
@@ -244,7 +249,7 @@ function updateUI() {
     renderCharts(totalIncome, totalExpense, trendData, trendLabels);
 }
 
-// 6. Charts (unchanged)
+// 6. Charts
 function renderCharts(inc, exp, trend, labels) {
     const config = { responsive: true, maintainAspectRatio: false };
 

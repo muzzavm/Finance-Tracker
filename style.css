@@ -1,3 +1,5 @@
+/* style.css-il responsiveness fixed */
+
 :root {
     --bg-main: radial-gradient(circle at top right, #1e1b4b, #0f172a, #080710);
     --glass: rgba(255, 255, 255, 0.05);
@@ -32,7 +34,7 @@ body {
     justify-content: center;
     align-items: center;
     color: var(--text-main);
-    overflow: hidden;
+    overflow: hidden; /* FIX: prevent double scrollbars */
 }
 
 /* Container Structure */
@@ -58,6 +60,7 @@ body {
     flex-direction: column;
     gap: 20px;
     border-right: 1px solid var(--border);
+    transition: transform 0.3s ease; /* smooth slide-in */
 }
 
 .sidebar-nav { display: flex; flex-direction: column; gap: 10px; margin-top: auto; }
@@ -138,8 +141,12 @@ input, select {
     align-items: center;
 }
 
+/* Desktop Hover */
+.user-card:hover { border-color: var(--primary); background: var(--glass-heavy); }
+
 /* --- RESPONSIVE MEDIA QUERIES --- */
 
+/* ========== BASE (MOBILE) ========== */
 @media (max-width: 767px) {
     body {
         align-items: flex-start;
@@ -154,48 +161,39 @@ input, select {
         border: none;
     }
 
-    /* FIX: Sidebar becomes a visible Bottom Menu on Mobile */
+    /* FIX: Sidebar becomes a hidden slide-in menu on mobile */
     .sidebar {
-        position: fixed !important;
-        bottom: 0 !important;
-        left: 0 !important;
-        width: 100% !important;
-        height: auto;
-        padding: 10px;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-        background: rgba(10, 10, 20, 0.98) !important;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 80%; /* Takes most of the screen width */
+        height: 100vh;
+        padding: 60px 20px 20px; /* space from top for close icon */
+        background: rgba(10, 10, 20, 0.98);
         backdrop-filter: blur(15px);
-        border-right: none;
-        border-top: 1px solid var(--border);
-        z-index: 9999 !important;
-        gap: 8px;
+        border-right: 1px solid var(--border);
+        z-index: 10000;
+        transform: translateX(-100%); /* Hidden by default */
     }
 
-    /* Hide text labels or logos that take too much space on mobile sidebar */
-    .sidebar h1, .sidebar p, .user-card small {
-        display: none;
+    /* Class to show sidebar via JS */
+    .sidebar.active {
+        transform: translateX(0);
     }
 
-    /* Action buttons adjustment */
-    .sidebar button, .sidebar-nav button {
-        flex: 1;
-        min-width: 80px;
-        font-size: 0.75rem;
-        padding: 8px 5px;
-    }
-
-    .sidebar-nav {
-        margin-top: 0;
-        flex-direction: row;
-        width: 100%;
-        gap: 8px;
+    /* Mobile Header is now visible */
+    .mobile-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 20px;
+        background: rgba(0, 0, 0, 0.3);
+        border-bottom: 1px solid var(--border);
+        z-index: 1000;
     }
 
     .content {
         padding: 15px;
-        padding-bottom: 150px; /* Space to see cards behind the bottom menu */
         overflow-y: auto;
     }
 
@@ -204,6 +202,7 @@ input, select {
     }
 }
 
+/* ========== TABLET & DESKTOP (768px+) ========== */
 @media (min-width: 768px) {
     .glass-container {
         flex-direction: row;
@@ -216,6 +215,17 @@ input, select {
         display: flex;
         width: 280px;
         height: 100%;
+        transform: translateX(0) !important; /* Always visible */
+        background: rgba(0, 0, 0, 0.2);
+    }
+
+    .mobile-header {
+        display: none; /* Hide on desktop */
+    }
+
+    .content {
+        flex: 1;
+        padding: 25px;
     }
 
     .grid-3 {
