@@ -156,20 +156,20 @@ input, select {
 
     /* FIX: Sidebar becomes a visible Bottom Menu on Mobile */
     .sidebar {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
         height: auto;
         padding: 10px;
         flex-direction: row;
         flex-wrap: wrap;
         justify-content: center;
-        background: rgba(10, 10, 20, 0.98);
+        background: rgba(10, 10, 20, 0.98) !important;
         backdrop-filter: blur(15px);
         border-right: none;
         border-top: 1px solid var(--border);
-        z-index: 9999;
+        z-index: 9999 !important;
         gap: 8px;
     }
 
